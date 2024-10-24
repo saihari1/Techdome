@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: saihari1/techdome-backend:latest # Update with your image
+          ports:
+            - containerPort: 3001 # Update with your backend port
+          env:
+            - name: MONGO_URI
+              value: "mongodb://admin:admin@mongo-service:27017"
+          resources:
+            requests:
+              memory: "256Mi"  # Minimum memory
+              cpu: "250m"      # Minimum CPU
+            limits:
+              memory: "512Mi"  # Maximum memory
+              cpu: "500m"      # Maximum CPU
+

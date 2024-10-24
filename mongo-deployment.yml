@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo-db
+          image: mongo:latest # Ensure this is the correct image
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "admin"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "admin"
+          resources:
+            requests:
+              memory: "256Mi"  # Minimum memory
+              cpu: "250m"      # Minimum CPU
+            limits:
+              memory: "512Mi"  # Maximum memory
+              cpu: "500m"      # Maximum CPU
+
