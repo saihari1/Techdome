@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb-container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "27017:27017"  # Optional, only if you want to access it from outside Docker
+
+  backend:
+    image: techdome-backend:latest
+    container_name: techdome-backend
+    depends_on:
+      - mongo  # Ensures MongoDB starts before backend
+    ports:
+      - "3001:3001"  # Exposing backend port
+    environment:
+      PORT: 3001
+      DB: mongodb://admin:admin@mongo:27017/admin  # Connection to MongoDB
+    working_dir: /app
+    command: npm start
+
+  frontend:
+    image: techdome-frontend:latest
+    container_name: techdome-frontend
+    depends_on:
+      - backend  # Ensures backend starts before frontend
+    ports:
+      - "3000:3000"  # Exposing frontend on port 3000
+    working_dir: /app
+    environment:
+      REACT_APP_BASE_URL: http://47.128.187.129:3001/api  # Use the public IP of the backend
+
